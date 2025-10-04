@@ -21,60 +21,55 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signUpUser } from "@/server/users";
+import { signInUser } from "@/server/users";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 
 const formSchema = z.object({
-  email: z.email(),
   password: z.string().min(8),
   confirmPassword: z.string().min(8),
-  name: z.string().min(1),
 });
 
-export function SignupForm({
+export function ResetPasswordForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const [isLoading, setIsLoading] = useState(false);
 
-  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false)
 
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      password: "",
-      confirmPassword: "",
-      name: "",
+        password: "",
+        confirmPassword: "",
     },
   });
 
-  const handleGoogleSignUp = async () => {
-    await authClient.signIn.social({
-      provider: "google",
-      callbackURL: "/dashboard",
-    });
-  };
-
+  const router = useRouter();
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
-      if (values.password !== values.confirmPassword) {
+      if(values.password !== values.confirmPassword){
         toast.error("Passwords do not match");
         return;
       }
-      const res = await signUpUser(values.email, values.password, values.name);
+      const {error} = await authClient.resetPassword({
+        newPassword: values.password,
+        token: token || ""
+      });
 
-      if (res.success) {
-        toast.success(res.message);
-        router.push("/dashboard");
+      if(!error){
+        router.push('/login');
+        toast.success("Password reset successful");
       } else {
-        toast.error(res.message);
+        toast.error(error.message);
       }
     } catch (error) {
       console.log(error);
@@ -87,9 +82,9 @@ export function SignupForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle>Register your account</CardTitle>
+          <CardTitle>Reset your password</CardTitle>
           <CardDescription>
-            Enter your email below to register your account
+            Enter your new password below to reset your password
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -99,43 +94,11 @@ export function SignupForm({
                 <div className="grid gap-3">
                   <FormField
                     control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input placeholder="example@exaple.com" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="grid gap-3">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="John" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          This is your public display name.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="grid gap-3">
-                  <FormField
-                    control={form.control}
                     name="password"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Password</FormLabel>
+                        
                         <FormControl>
                           <Input type="password" {...field} />
                         </FormControl>
@@ -151,39 +114,25 @@ export function SignupForm({
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Confirm Password</FormLabel>
+
                         <FormControl>
                           <Input type="password" {...field} />
                         </FormControl>
-                        <FormDescription>
-                          This is your password.
-                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? (
-                      <Loader2 className="size-4 animate-spin" />
-                    ) : (
-                      "Sign Up"
-                    )}
-                  </Button>
-                  <Button
-                    onClick={handleGoogleSignUp}
-                    type="button"
-                    variant="outline"
-                    className="w-full"
-                  >
-                    Sign up with Google
+                  <Button type="submit" className="w-full" disabled={isLoading} >
+                    {isLoading ? <Loader2 className="size-4 animate-spin" /> : "Change Password"}
                   </Button>
                 </div>
               </div>
               <div className="mt-4 text-center text-sm">
-                Have an account?{" "}
-                <Link href="/login" className="underline underline-offset-4">
-                  Log In
+                Don&apos;t have an account?{" "}
+                <Link href="/signup" className="underline underline-offset-4">
+                  Sign Up
                 </Link>
               </div>
             </form>
