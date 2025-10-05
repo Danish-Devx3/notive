@@ -68,7 +68,7 @@ export const updateNote = async (id: string, values: Partial<InsertNote>) => {
   }
 };
 
-export const deleteNotebook = async (id: string) => {
+export const deleteNote = async (id: string) => {
   try {
     await db.delete(notes).where(eq(notes.id, id));
     return { success: true, message: "Note deleted successfully" };

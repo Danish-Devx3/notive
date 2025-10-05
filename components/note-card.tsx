@@ -1,6 +1,6 @@
 "use client";
 
-import { Notebook } from "@/db/schema";
+import { Note } from "@/db/schema";
 import React, { useState } from "react";
 import {
   Card,
@@ -24,14 +24,14 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { Loader2, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { deleteNotebook } from "@/server/notebooks";
+import { deleteNote } from "@/server/notes";
 import { toast } from "sonner";
 
-interface NotebookCardProps {
-  notebook: Notebook;
+interface NoteCardProps {
+  note: Note;
 }
 
-export default function NotebookCard({ notebook }: NotebookCardProps) {
+export default function NoteCard({ note }: NoteCardProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -40,14 +40,14 @@ export default function NotebookCard({ notebook }: NotebookCardProps) {
   async function handleDelete() {
     try {
       setIsDeleting(true);
-      const res = await deleteNotebook(notebook.id);
+      const res = await deleteNote(note.id);
 
       if (res.success) {
         router.refresh();
-        toast.success("Notebook deleted successfully");
+        toast.success("Notes deleted successfully");
       }
     } catch (error) {
-      toast.error("Failed to delete notebook");
+      toast.error("Failed to delete notes");
     } finally {
       setIsDeleting(false);
       setIsOpen(false);
@@ -57,13 +57,13 @@ export default function NotebookCard({ notebook }: NotebookCardProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{notebook.name}</CardTitle>
+        <CardTitle>{note.title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <p>{notebook.notes.length ?? 0}</p>
+        <p></p>
       </CardContent>
       <CardFooter className="flex justify-end gap-2">
-        <Link href={`/dashboard/notebook/${notebook.id}`}>
+        <Link href={`/dashboard/notebook/${note.notebookId}/note/${note.id}`}>
           <Button variant={"outline"}>View</Button>
         </Link>
 
