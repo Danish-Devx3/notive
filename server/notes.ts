@@ -46,6 +46,9 @@ export const getNoteById = async (id: string) => {
   try {
     const note = await db.query.notes.findFirst({
       where: eq(notes.id, id),
+      with: {
+        notebook: true,
+      }
     });
     if (!note) {
       return { success: false, message: "Note not found" };
@@ -56,7 +59,7 @@ export const getNoteById = async (id: string) => {
   }
 };
 
-export const updateNote = async (id: string, values: InsertNote) => {
+export const updateNote = async (id: string, values: Partial<InsertNote>) => {
   try {
     await db.update(notes).set(values).where(eq(notes.id, id));
     return { success: true, message: "Note updated successfully" };

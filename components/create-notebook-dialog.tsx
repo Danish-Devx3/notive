@@ -79,7 +79,7 @@ export default function CreateNotebookBtn() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen} >
       <DialogTrigger asChild>
-        <Button>Create Notebook</Button>
+        <Button className="w-max">Create Notebook</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

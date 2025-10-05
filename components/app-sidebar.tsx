@@ -37,7 +37,7 @@ export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sideb
     url: `/dashboard/notebook/${notebook.id}`,
     items: notebook.notes?.map((note: { id: string; title: string }) => ({
       title: note.title,
-      url: `/dashboard/note/${note.id}`,
+      url: `/dashboard/notebook/${notebook.id}/note/${note.id}`,
     })),
   })) ?? [])
 ],

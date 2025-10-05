@@ -120,3 +120,234 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+
+/* ============================================
+   TipTap Editor Styles - Tailwind Compatible
+   Add to globals.css (after @tailwind directives)
+   ============================================ */
+
+@layer components {
+  /* Basic editor styles */
+  .tiptap :first-child {
+    @apply mt-0;
+  }
+
+  /* List styles */
+  .tiptap ul,
+  .tiptap ol {
+    @apply pl-4 pr-0 my-5 mr-2;
+  }
+
+  .tiptap ul li p,
+  .tiptap ol li p {
+    @apply my-1;
+  }
+
+  /* Heading styles */
+  .tiptap h1,
+  .tiptap h2,
+  .tiptap h3,
+  .tiptap h4,
+  .tiptap h5,
+  .tiptap h6 {
+    @apply leading-tight mt-10;
+  }
+
+  .tiptap h1,
+  .tiptap h2 {
+    @apply mt-14 mb-6;
+  }
+
+  .tiptap h1 {
+    @apply text-2xl font-bold;
+  }
+
+  .tiptap h2 {
+    @apply text-xl font-semibold;
+  }
+
+  .tiptap h3 {
+    @apply text-lg font-semibold;
+  }
+
+  .tiptap h4,
+  .tiptap h5,
+  .tiptap h6 {
+    @apply text-base font-semibold;
+  }
+
+  /* Code styles */
+  .tiptap code {
+    @apply bg-purple-100 rounded px-1.5 py-1 text-gray-900 text-sm font-mono;
+  }
+
+  .tiptap pre {
+    @apply bg-gray-900 rounded-lg text-white font-mono my-6 p-3 overflow-x-auto;
+  }
+
+  .tiptap pre code {
+    @apply bg-transparent text-inherit text-xs p-0;
+  }
+
+  /* Blockquote styles */
+  .tiptap blockquote {
+    @apply border-l-4 border-gray-300 my-6 pl-4 text-gray-600 italic;
+  }
+
+  /* Horizontal rule */
+  .tiptap hr {
+    @apply border-0 border-t border-gray-200 my-8;
+  }
+
+  /* Paragraph spacing */
+  .tiptap p {
+    @apply my-4;
+  }
+
+  /* Link styles */
+  .tiptap a {
+    @apply text-blue-600 underline cursor-pointer hover:text-blue-700;
+  }
+
+  /* Text formatting */
+  .tiptap strong {
+    @apply font-bold;
+  }
+
+  .tiptap em {
+    @apply italic;
+  }
+
+  .tiptap s {
+    @apply line-through;
+  }
+
+  /* Selection */
+  .tiptap ::selection {
+    @apply bg-blue-100;
+  }
+
+  /* Task list styles */
+  .tiptap ul[data-type="taskList"] {
+    @apply list-none p-0;
+  }
+
+  .tiptap ul[data-type="taskList"] li {
+    @apply flex items-start;
+  }
+
+  .tiptap ul[data-type="taskList"] li > label {
+    @apply flex-none mr-2 select-none;
+  }
+
+  .tiptap ul[data-type="taskList"] li > div {
+    @apply flex-1;
+  }
+
+  /* Table styles */
+  .tiptap table {
+    @apply border-collapse my-6 w-full overflow-hidden;
+  }
+
+  .tiptap table td,
+  .tiptap table th {
+    @apply border border-gray-200 p-2 align-top;
+  }
+
+  .tiptap table th {
+    @apply bg-gray-50 font-semibold text-left;
+  }
+
+  /* Image styles */
+  .tiptap img {
+    @apply max-w-full h-auto rounded-lg my-4;
+  }
+
+  /* Focus outline */
+  .tiptap:focus {
+    @apply outline-none;
+  }
+
+  /* Placeholder */
+  .tiptap p.is-editor-empty:first-child::before {
+    @apply text-gray-400 float-left h-0 pointer-events-none;
+    content: attr(data-placeholder);
+  }
+
+  /* Control group container */
+  .control-group {
+    @apply p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg;
+  }
+
+  /* Button group wrapper */
+  .button-group {
+    @apply flex flex-wrap gap-1 items-center;
+  }
+
+  /* Base button styles */
+  .button-group button {
+    @apply px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md cursor-pointer transition-all duration-150 select-none;
+  }
+
+  /* Button hover state */
+  .button-group button:hover:not(:disabled) {
+    @apply bg-gray-100 border-gray-400;
+  }
+
+  /* Button active/pressed state */
+  .button-group button:active:not(:disabled) {
+    @apply bg-gray-200 translate-y-px;
+  }
+
+  /* Active button (when format is applied) */
+  .button-group button.is-active {
+    @apply bg-blue-600 text-white border-blue-700 font-semibold;
+  }
+
+  .button-group button.is-active:hover {
+    @apply bg-blue-700 border-blue-800;
+  }
+
+  /* Disabled button state */
+  .button-group button:disabled {
+    @apply opacity-50 cursor-not-allowed bg-gray-50 text-gray-400;
+  }
+
+  /* Focus state for accessibility */
+  .button-group button:focus {
+    @apply outline-2 outline-blue-600 outline-offset-2;
+  }
+
+  .button-group button:focus:not(:focus-visible) {
+    @apply outline-none;
+  }
+
+  /* Optional: Icons */
+  .button-group button svg {
+    @apply w-4 h-4 inline-block align-middle;
+  }
+
+  /* Optional: Divider */
+  .button-group .divider {
+    @apply w-px h-6 bg-gray-300 mx-1;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .control-group {
+    background-color: rgba(243, 243, 243, 0.128);
+    border-color: #c5cad2;
+  }
+  
+  .button-group button {
+    background-color: #f9fafb;
+    color: #374151;
+    border-color: #4b5563;
+  }
+  
+  .button-group button:hover:not(:disabled) {
+    background-color: #ffffffd5;
+  }
+}
