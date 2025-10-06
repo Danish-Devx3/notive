@@ -7,7 +7,7 @@ export async function middleware(req: NextRequest){
     const sessionCookie = getSessionCookie(req);
 
     if(!sessionCookie){
-        return Response.redirect(new URL('/', req.url));
+        return Response.redirect(new URL('/login', req.url));
     }
 
     return NextResponse.next();
