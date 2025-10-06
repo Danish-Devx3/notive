@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { Loader2, Trash2 } from "lucide-react";
+import { ArrowRightIcon, Loader2, MoveRight, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { deleteNote } from "@/server/notes";
 import { toast } from "sonner";
@@ -56,15 +56,20 @@ export default function NoteCard({ note }: NoteCardProps) {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex justify-between items-center">
         <CardTitle>{note.title}</CardTitle>
+        <Link href={`/dashboard/notebook/${note.notebookId}/note/${note.id}`}>
+          <Button className="flex items-center justify-center gap-2" variant={"outline"}>Edit <MoveRight /></Button>
+        </Link>
       </CardHeader>
       <CardContent>
         <p></p>
       </CardContent>
       <CardFooter className="flex justify-end gap-2">
-        <Link href={`/dashboard/notebook/${note.notebookId}/note/${note.id}`}>
-          <Button variant={"outline"}>View</Button>
+        <Link
+          href={`/dashboard/notebook/${note.notebookId}/note/?id=${note.id}`}
+        >
+          <Button>View</Button>
         </Link>
 
         <AlertDialog open={isOpen} onOpenChange={setIsOpen}>

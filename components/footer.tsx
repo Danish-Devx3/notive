@@ -1,32 +1,7 @@
-import { Logo } from '@/components/logo'
 import Link from 'next/link'
+import Logo from './logo'
 
-const links = [
-    {
-        title: 'Features',
-        href: '#',
-    },
-    {
-        title: 'Solution',
-        href: '#',
-    },
-    {
-        title: 'Customers',
-        href: '#',
-    },
-    {
-        title: 'Pricing',
-        href: '#',
-    },
-    {
-        title: 'Help',
-        href: '#',
-    },
-    {
-        title: 'About',
-        href: '#',
-    },
-]
+const links = []
 
 export default function FooterSection() {
     return (
@@ -36,10 +11,10 @@ export default function FooterSection() {
                     href="/"
                     aria-label="go home"
                     className="mx-auto block size-fit">
-                    <Logo />
+                    <Logo/>
                 </Link>
 
-                <div className="my-8 flex flex-wrap justify-center gap-6 text-sm">
+                {/* <div className="my-8 flex flex-wrap justify-center gap-6 text-sm">
                     {links.map((link, index) => (
                         <Link
                             key={index}
@@ -48,7 +23,7 @@ export default function FooterSection() {
                             <span>{link.title}</span>
                         </Link>
                     ))}
-                </div>
+                </div> */}
                 <div className="my-8 flex flex-wrap justify-center gap-6 text-sm">
                     <Link
                         href="#"
@@ -158,7 +133,7 @@ export default function FooterSection() {
                         </svg>
                     </Link>
                 </div>
-                <span className="text-muted-foreground block text-center text-sm"> © {new Date().getFullYear()} Tailark, All rights reserved</span>
+                <span className="text-muted-foreground block text-center text-sm"> © {new Date().getFullYear()} Notive, All rights reserved</span>
             </div>
         </footer>
     )

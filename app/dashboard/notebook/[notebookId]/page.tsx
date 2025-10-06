@@ -4,6 +4,7 @@ import React from 'react'
 import { JSONContent } from '@tiptap/react';
 import { getNotebookById } from '@/server/notebooks';
 import NoteCard from '@/components/note-card';
+import CreateNoteBtn from '@/components/create-note-btn';
 
 export default async function Page({params}: {params: {notebookId: string}}) {
 
@@ -17,7 +18,10 @@ export default async function Page({params}: {params: {notebookId: string}}) {
         {label: notebook?.name ?? "Notebook", url: `/dashboard/notebook/${notebookId}`}
     ]} >
     
-        <h1>{notebook?.name}</h1>
+        <div className="flex justify-between items-center">
+          <h1 className="text-xl">{notebook?.name}</h1>
+          <CreateNoteBtn notebookId={notebookId}/> 
+        </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {notebook?.notes?.map((note) => (

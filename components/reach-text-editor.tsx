@@ -1,37 +1,100 @@
-"use client";
-import { updateNote } from "@/server/notes";
-// import './styles.scss'
-
-import { TextStyleKit } from "@tiptap/extension-text-style";
+"use client"
+import { TextStyle } from "@tiptap/extension-text-style";
 import type { Editor, JSONContent } from "@tiptap/react";
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline";
+import Link from "@tiptap/extension-link";
+import Highlight from "@tiptap/extension-highlight";
+import TextAlign from "@tiptap/extension-text-align";
+import Superscript from "@tiptap/extension-superscript";
+import Subscript from "@tiptap/extension-subscript";
 import React from "react";
+import {
+  Undo,
+  Redo,
+  Bold,
+  Italic,
+  Strikethrough,
+  Code,
+  List,
+  ListOrdered,
+  Quote,
+  UnderlineIcon,
+  Highlighter,
+  LinkIcon,
+  SuperscriptIcon,
+  SubscriptIcon,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  AlignJustify,
+  ChevronDown,
+  Moon,
+  Sun,
+  ImagePlus,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Separator } from "@/components/ui/separator";
+import { Toggle } from "@/components/ui/toggle";
+import { cn } from "@/lib/utils";
+import { updateNote } from "@/server/notes";
 
-const extensions = [TextStyleKit, StarterKit];
+const extensions = [
+  TextStyle,
+  StarterKit.configure({
+    heading: {
+      levels: [1, 2, 3, 4, 5, 6],
+    },
+  }),
+  Underline,
+  Link.configure({
+    openOnClick: false,
+    HTMLAttributes: {
+      class: "text-primary underline underline-offset-4",
+    },
+  }),
+  Highlight.configure({
+    multicolor: true,
+  }),
+  TextAlign.configure({
+    types: ["heading", "paragraph"],
+  }),
+  Superscript,
+  Subscript,
+];
 
 function MenuBar({ editor }: { editor: Editor }) {
-  // Read the current editor's state, and re-render the component when it changes
+  const [isDark, setIsDark] = React.useState(
+    document.documentElement.classList.contains("dark")
+  );
+
   const editorState = useEditorState({
     editor,
     selector: (ctx) => {
       return {
         isBold: ctx.editor.isActive("bold") ?? false,
-        canBold: ctx.editor.can().chain().toggleBold().run() ?? false,
         isItalic: ctx.editor.isActive("italic") ?? false,
-        canItalic: ctx.editor.can().chain().toggleItalic().run() ?? false,
         isStrike: ctx.editor.isActive("strike") ?? false,
-        canStrike: ctx.editor.can().chain().toggleStrike().run() ?? false,
         isCode: ctx.editor.isActive("code") ?? false,
-        canCode: ctx.editor.can().chain().toggleCode().run() ?? false,
-        canClearMarks: ctx.editor.can().chain().unsetAllMarks().run() ?? false,
-        isParagraph: ctx.editor.isActive("paragraph") ?? false,
+        isUnderline: ctx.editor.isActive("underline") ?? false,
+        isHighlight: ctx.editor.isActive("highlight") ?? false,
+        isLink: ctx.editor.isActive("link") ?? false,
+        isSuperscript: ctx.editor.isActive("superscript") ?? false,
+        isSubscript: ctx.editor.isActive("subscript") ?? false,
+        isAlignLeft: ctx.editor.isActive({ textAlign: "left" }) ?? false,
+        isAlignCenter: ctx.editor.isActive({ textAlign: "center" }) ?? false,
+        isAlignRight: ctx.editor.isActive({ textAlign: "right" }) ?? false,
+        isAlignJustify: ctx.editor.isActive({ textAlign: "justify" }) ?? false,
         isHeading1: ctx.editor.isActive("heading", { level: 1 }) ?? false,
         isHeading2: ctx.editor.isActive("heading", { level: 2 }) ?? false,
         isHeading3: ctx.editor.isActive("heading", { level: 3 }) ?? false,
-        isHeading4: ctx.editor.isActive("heading", { level: 4 }) ?? false,
-        isHeading5: ctx.editor.isActive("heading", { level: 5 }) ?? false,
-        isHeading6: ctx.editor.isActive("heading", { level: 6 }) ?? false,
         isBulletList: ctx.editor.isActive("bulletList") ?? false,
         isOrderedList: ctx.editor.isActive("orderedList") ?? false,
         isCodeBlock: ctx.editor.isActive("codeBlock") ?? false,
@@ -42,171 +105,323 @@ function MenuBar({ editor }: { editor: Editor }) {
     },
   });
 
+  const getCurrentHeading = () => {
+    if (editorState.isHeading1) return "H1";
+    if (editorState.isHeading2) return "H2";
+    if (editorState.isHeading3) return "H3";
+    return "Normal";
+  };
+
+  const setLink = React.useCallback(() => {
+    const previousUrl = editor.getAttributes("link").href;
+    const url = window.prompt("URL", previousUrl);
+
+    if (url === null) {
+      return;
+    }
+
+    if (url === "") {
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
+      return;
+    }
+
+    editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
+  }, [editor]);
+
+  const toggleDarkMode = () => {
+    setIsDark(!isDark);
+    document.documentElement.classList.toggle("dark");
+  };
+
   return (
-    <div className="control-group">
-      <div className="button-group ">
-        <button
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          disabled={!editorState.canBold}
-          className={editorState.isBold ? "is-active" : ""}
-        >
-          Bold
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          disabled={!editorState.canItalic}
-          className={editorState.isItalic ? "is-active" : ""}
-        >
-          Italic
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleStrike().run()}
-          disabled={!editorState.canStrike}
-          className={editorState.isStrike ? "is-active" : ""}
-        >
-          Strike
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleCode().run()}
-          disabled={!editorState.canCode}
-          className={editorState.isCode ? "is-active" : ""}
-        >
-          Code
-        </button>
-        <button onClick={() => editor.chain().focus().unsetAllMarks().run()}>
-          Clear marks
-        </button>
-        <button onClick={() => editor.chain().focus().clearNodes().run()}>
-          Clear nodes
-        </button>
-        <button
-          onClick={() => editor.chain().focus().setParagraph().run()}
-          className={editorState.isParagraph ? "is-active" : ""}
-        >
-          Paragraph
-        </button>
-        <button
-          onClick={() =>
-            editor.chain().focus().toggleHeading({ level: 1 }).run()
-          }
-          className={editorState.isHeading1 ? "is-active" : ""}
-        >
-          H1
-        </button>
-        <button
-          onClick={() =>
-            editor.chain().focus().toggleHeading({ level: 2 }).run()
-          }
-          className={editorState.isHeading2 ? "is-active" : ""}
-        >
-          H2
-        </button>
-        <button
-          onClick={() =>
-            editor.chain().focus().toggleHeading({ level: 3 }).run()
-          }
-          className={editorState.isHeading3 ? "is-active" : ""}
-        >
-          H3
-        </button>
-        <button
-          onClick={() =>
-            editor.chain().focus().toggleHeading({ level: 4 }).run()
-          }
-          className={editorState.isHeading4 ? "is-active" : ""}
-        >
-          H4
-        </button>
-        <button
-          onClick={() =>
-            editor.chain().focus().toggleHeading({ level: 5 }).run()
-          }
-          className={editorState.isHeading5 ? "is-active" : ""}
-        >
-          H5
-        </button>
-        <button
-          onClick={() =>
-            editor.chain().focus().toggleHeading({ level: 6 }).run()
-          }
-          className={editorState.isHeading6 ? "is-active" : ""}
-        >
-          H6
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={editorState.isBulletList ? "is-active" : ""}
-        >
-          Bullet list
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={editorState.isOrderedList ? "is-active" : ""}
-        >
-          Ordered list
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-          className={editorState.isCodeBlock ? "is-active" : ""}
-        >
-          Code block
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className={editorState.isBlockquote ? "is-active" : ""}
-        >
-          Blockquote
-        </button>
-        <button
-          onClick={() => editor.chain().focus().setHorizontalRule().run()}
-        >
-          Horizontal rule
-        </button>
-        <button onClick={() => editor.chain().focus().setHardBreak().run()}>
-          Hard break
-        </button>
-        <button
-          onClick={() => editor.chain().focus().undo().run()}
-          disabled={!editorState.canUndo}
-        >
-          Undo
-        </button>
-        <button
-          onClick={() => editor.chain().focus().redo().run()}
-          disabled={!editorState.canRedo}
-        >
-          Redo
-        </button>
+    <div className="border-b border-editor-border bg-editor-toolbar sticky top-0 z-10">
+      <div className="flex items-center gap-1 p-2 flex-wrap">
+        {/* Undo/Redo */}
+        <div className="flex items-center gap-0.5">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => editor.chain().focus().undo().run()}
+            disabled={!editorState.canUndo}
+          >
+            <Undo className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => editor.chain().focus().redo().run()}
+            disabled={!editorState.canRedo}
+          >
+            <Redo className="h-4 w-4" />
+          </Button>
+        </div>
+
+        <Separator orientation="vertical" className="h-8 mx-1" />
+
+        {/* Heading Dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm" className="h-8 gap-1">
+              {getCurrentHeading()}
+              <ChevronDown className="h-3 w-3" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            <DropdownMenuItem
+              onClick={() => editor.chain().focus().setParagraph().run()}
+            >
+              Normal
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                editor.chain().focus().toggleHeading({ level: 1 }).run()
+              }
+            >
+              Heading 1
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                editor.chain().focus().toggleHeading({ level: 2 }).run()
+              }
+            >
+              Heading 2
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                editor.chain().focus().toggleHeading({ level: 3 }).run()
+              }
+            >
+              Heading 3
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* Lists */}
+        <div className="flex items-center gap-0.5">
+          <Toggle
+            size="sm"
+            pressed={editorState.isBulletList}
+            onPressedChange={() => editor.chain().focus().toggleBulletList().run()}
+            className="h-8 w-8 p-0"
+          >
+            <List className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editorState.isOrderedList}
+            onPressedChange={() => editor.chain().focus().toggleOrderedList().run()}
+            className="h-8 w-8 p-0"
+          >
+            <ListOrdered className="h-4 w-4" />
+          </Toggle>
+        </div>
+
+        {/* Code Block & Quote */}
+        <div className="flex items-center gap-0.5">
+          <Toggle
+            size="sm"
+            pressed={editorState.isCodeBlock}
+            onPressedChange={() => editor.chain().focus().toggleCodeBlock().run()}
+            className="h-8 w-8 p-0"
+          >
+            <Code className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editorState.isBlockquote}
+            onPressedChange={() => editor.chain().focus().toggleBlockquote().run()}
+            className="h-8 w-8 p-0"
+          >
+            <Quote className="h-4 w-4" />
+          </Toggle>
+        </div>
+
+        <Separator orientation="vertical" className="h-8 mx-1" />
+
+        {/* Text Formatting */}
+        <div className="flex items-center gap-0.5">
+          <Toggle
+            size="sm"
+            pressed={editorState.isBold}
+            onPressedChange={() => editor.chain().focus().toggleBold().run()}
+            className="h-8 w-8 p-0"
+          >
+            <Bold className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editorState.isItalic}
+            onPressedChange={() => editor.chain().focus().toggleItalic().run()}
+            className="h-8 w-8 p-0"
+          >
+            <Italic className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editorState.isStrike}
+            onPressedChange={() => editor.chain().focus().toggleStrike().run()}
+            className="h-8 w-8 p-0"
+          >
+            <Strikethrough className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editorState.isCode}
+            onPressedChange={() => editor.chain().focus().toggleCode().run()}
+            className="h-8 w-8 p-0"
+          >
+            <Code className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editorState.isUnderline}
+            onPressedChange={() => editor.chain().focus().toggleUnderline().run()}
+            className="h-8 w-8 p-0"
+          >
+            <UnderlineIcon className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editorState.isHighlight}
+            onPressedChange={() => editor.chain().focus().toggleHighlight().run()}
+            className="h-8 w-8 p-0"
+          >
+            <Highlighter className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editorState.isLink}
+            onPressedChange={setLink}
+            className="h-8 w-8 p-0"
+          >
+            <LinkIcon className="h-4 w-4" />
+          </Toggle>
+        </div>
+
+        {/* Superscript/Subscript */}
+        <div className="flex items-center gap-0.5">
+          <Toggle
+            size="sm"
+            pressed={editorState.isSuperscript}
+            onPressedChange={() => editor.chain().focus().toggleSuperscript().run()}
+            className="h-8 w-8 p-0"
+          >
+            <SuperscriptIcon className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editorState.isSubscript}
+            onPressedChange={() => editor.chain().focus().toggleSubscript().run()}
+            className="h-8 w-8 p-0"
+          >
+            <SubscriptIcon className="h-4 w-4" />
+          </Toggle>
+        </div>
+
+        <Separator orientation="vertical" className="h-8 mx-1" />
+
+        {/* Text Alignment */}
+        <div className="flex items-center gap-0.5">
+          <Toggle
+            size="sm"
+            pressed={editorState.isAlignLeft}
+            onPressedChange={() => editor.chain().focus().setTextAlign("left").run()}
+            className="h-8 w-8 p-0"
+          >
+            <AlignLeft className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editorState.isAlignCenter}
+            onPressedChange={() =>
+              editor.chain().focus().setTextAlign("center").run()
+            }
+            className="h-8 w-8 p-0"
+          >
+            <AlignCenter className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editorState.isAlignRight}
+            onPressedChange={() => editor.chain().focus().setTextAlign("right").run()}
+            className="h-8 w-8 p-0"
+          >
+            <AlignRight className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editorState.isAlignJustify}
+            onPressedChange={() =>
+              editor.chain().focus().setTextAlign("justify").run()
+            }
+            className="h-8 w-8 p-0"
+          >
+            <AlignJustify className="h-4 w-4" />
+          </Toggle>
+        </div>
+
+        <Separator orientation="vertical" className="h-8 mx-1" />
+
+        {/* Add Button */}
+        <Button variant="ghost" size="sm" className="h-8 gap-1">
+          <ImagePlus className="h-4 w-4" />
+          Add
+        </Button>
+
+        <div className="flex-1" />
+
+        {/* Dark Mode Toggle */}
+        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={toggleDarkMode}>
+          {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+        </Button>
       </div>
     </div>
   );
 }
 
-interface ReachTextEditorProps {
-    content?: JSONContent[];
-    noteId?: string;
+interface RichTextEditorProps {
+  content?: JSONContent;
+  onChange?: (content: JSONContent) => void;
+  className?: string;
+  noteId?: string;
 }
 
-export default function ReachTextEditor({content, noteId}: ReachTextEditorProps) {
+export default function RichTextEditor({
+  content,
+  onChange,
+  className,
+  noteId,
+}: RichTextEditorProps) {
   const editor = useEditor({
-    onUpdate: ({editor}) => {
-        if(noteId){
-        updateNote(noteId, {content:editor.getJSON()})
-        }
+    onUpdate: ({ editor }) => {
+      if (noteId) {
+        const content = editor.getJSON();
+        updateNote(noteId, { content });
+      }
     },
     extensions,
     content,
-
     immediatelyRender: false,
+    editorProps: {
+      attributes: {
+        class: cn(
+          "prose prose-sm sm:prose-base lg:prose-lg dark:prose-invert max-w-none focus:outline-none min-h-[500px] p-8",
+          className
+        ),
+      },
+    },
   });
 
-  if(editor===null){
-    return;
+  if (editor === null) {
+    return null;
   }
+
   return (
-    <div>
+    <div className="border border-editor-border rounded-lg overflow-hidden bg-background shadow-lg">
       <MenuBar editor={editor} />
       <EditorContent editor={editor} />
     </div>
   );
-};
+}

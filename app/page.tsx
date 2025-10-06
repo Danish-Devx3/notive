@@ -1,4 +1,3 @@
-import CallToAction from "@/components/call-to-action";
 import Features from "@/components/features-1";
 import FooterSection from "@/components/footer";
 
@@ -9,7 +8,6 @@ export default function Home() {
     <div>
       <HeroSection/>
       <Features/>
-      <CallToAction/>
       <FooterSection/>
     </div>
   );
