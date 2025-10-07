@@ -390,7 +390,6 @@ interface RichTextEditorProps {
 
 export default function RichTextEditor({
   content,
-  onChange,
   className,
   noteId,
 }: RichTextEditorProps) {

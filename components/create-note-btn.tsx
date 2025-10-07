@@ -22,7 +22,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -331,7 +330,7 @@ export default function CreateNoteBtn({ notebookId }: { notebookId: string }) {
       } else {
         toast.error(res.message);
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to create note");
     } finally {
       setIsLoading(false);

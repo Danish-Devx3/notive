@@ -1,7 +1,5 @@
 import PageWrapper from '@/components/page-wrapper';
-import ReachTextEditor from '@/components/reach-text-editor'
 import React from 'react'
-import { JSONContent } from '@tiptap/react';
 import { getNotebookById } from '@/server/notebooks';
 import NoteCard from '@/components/note-card';
 import CreateNoteBtn from '@/components/create-note-btn';

@@ -108,6 +108,17 @@ function AnimatedGroup({
   as = 'div',
   asChild = 'div',
 }: AnimatedGroupProps) {
+  const toMotionArg = (tag: React.ElementType): string | React.ComponentType =>
+    typeof tag === 'string' ? tag : (tag as React.ComponentType);
+
+  type MotionElementProps = {
+    children?: React.ReactNode;
+    variants?: Variants;
+    initial?: string;
+    animate?: string;
+    className?: string;
+  } & Record<string, unknown>;
+
   const selectedVariants = {
     item: addDefaultVariants(preset ? presetVariants[preset] : {}),
     container: addDefaultVariants(defaultContainerVariants),
@@ -116,11 +127,11 @@ function AnimatedGroup({
   const itemVariants = variants?.item || selectedVariants.item;
 
   const MotionComponent = React.useMemo(
-    () => motion.create(as as keyof JSX.IntrinsicElements),
+    () => motion.create(toMotionArg(as)) as unknown as React.ComponentType<MotionElementProps>,
     [as]
   );
   const MotionChild = React.useMemo(
-    () => motion.create(asChild as keyof JSX.IntrinsicElements),
+    () => motion.create(toMotionArg(asChild)) as unknown as React.ComponentType<MotionElementProps>,
     [asChild]
   );
 

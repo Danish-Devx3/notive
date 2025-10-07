@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,8 +22,8 @@ const oxanium = Oxanium({
 });
 
 export const metadata: Metadata = {
-  title: "NoteApp",
-  description: "create your notes and notebooks",
+  title: "Notive",
+  description: "Create your notes, organize your thoughts, and bring ideas to life.",
 };
 
 export default function RootLayout({
@@ -35,6 +36,7 @@ export default function RootLayout({
       <body
         className={`${oxanium.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Suspense>
         <NuqsAdapter>
           <ThemeProvider
             attribute="class"
@@ -46,6 +48,7 @@ export default function RootLayout({
             {children}
           </ThemeProvider>
         </NuqsAdapter>
+        </Suspense>
       </body>
     </html>
   );

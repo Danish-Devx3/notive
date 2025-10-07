@@ -69,7 +69,7 @@ const ResetPasswordEmail = ({
             {/* Alternative Link Section */}
             <Section className="mb-[32px]">
               <Text className="text-[14px] text-gray-600 leading-[20px] mb-[12px]">
-                If the button above doesn't work, copy and paste this link into your browser:
+                If the button above doesn&apos;t work, copy and paste this link into your browser:
               </Text>
               <Text className="text-[12px] text-blue-600 leading-[18px] break-all bg-gray-50 p-[12px] rounded border border-gray-200">
                 <Link href={resetUrl} className="text-blue-600 no-underline">
@@ -81,7 +81,7 @@ const ResetPasswordEmail = ({
             {/* Warning Section */}
             <Section className="bg-yellow-50 border border-yellow-200 rounded-lg p-[16px] mb-[32px]">
               <Text className="text-[14px] text-yellow-800 leading-[20px] m-0">
-                <strong>⚠️ Security Notice:</strong> If you didn't request this password reset, please ignore this email. Your password will remain unchanged.
+                <strong>⚠️ Security Notice:</strong> If you didn&apos;t request this password reset, please ignore this email. Your password will remain unchanged.
               </Text>
             </Section>
 
@@ -93,7 +93,7 @@ const ResetPasswordEmail = ({
                 <strong>Why did I receive this email?</strong>
               </Text>
               <Text className="text-[14px] text-gray-600 leading-[20px] mb-[16px]">
-                This email was sent to <strong>{userEmail}</strong> because a password reset was requested for this account. If this wasn't you, please contact our support team immediately.
+                This email was sent to <strong>{userEmail}</strong> because a password reset was requested for this account. If this wasn&apos;t you, please contact our support team immediately.
               </Text>
 
               <Text className="text-[12px] text-gray-500 leading-[18px] text-center mt-[24px]">

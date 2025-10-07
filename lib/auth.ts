@@ -40,8 +40,8 @@ export const auth = betterAuth({
             resetUrl: url,
           }),
         });
-      } catch (error) {
-        
+      } catch {
+        throw new Error("Failed to send reset password email");
       }
     }
   },
@@ -54,7 +54,7 @@ export const auth = betterAuth({
     sendVerificationEmail: async ({ user, url }) => {
       try {
 
-        const { data, error } = await resend.emails.send({
+        const { error } = await resend.emails.send({
           // CRITICAL: Use Resend test domain for development
           from: "onboarding@resend.dev",
           to: user.email,
@@ -71,7 +71,7 @@ export const auth = betterAuth({
           throw new Error(`Failed to send verification email: ${error.message}`);
         }
 
-      } catch (error: any) {
+      } catch (error) {
         console.error("❌ Error sending verification email:", error);
         throw error;
       }

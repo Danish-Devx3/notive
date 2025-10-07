@@ -16,7 +16,6 @@ import { Button } from "./ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -68,7 +67,7 @@ export default function CreateNotebookBtn() {
     } else {
       toast.error(res.message);
     }
-    } catch (error) {
+    } catch {
         toast.error("Failed to create notebook");
     } finally {
         setIsLoading(false);

@@ -1,12 +1,17 @@
 "use client"
 import PageWrapper from "@/components/page-wrapper";
 import ShowNote from "@/components/show-note";
+import { Note, Notebook } from "@/db/schema";
 import { getNoteById } from "@/server/notes";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
+interface NoteWithNotebook extends Note {
+  notebook: Notebook;
+}
+
 export default function Page() {
-  const [note, setNote] = useState<any>()
+  const [note, setNote] = useState<NoteWithNotebook>()
 
   const searchParams = useSearchParams()
  
@@ -15,10 +20,10 @@ export default function Page() {
   useEffect(() => {
     if(id){
       getNoteById(id).then((res) => {
-        setNote(res.note)
+        setNote(res.note as NoteWithNotebook)
       })
     }
-  }, [])
+  }, [id])
   
   return (
     <PageWrapper
@@ -28,12 +33,11 @@ export default function Page() {
         { label: note?.title ??"Note", url: `/dashboard/notebook/${note?.notebookId}/note?id=${id}` },
       ]}
     >
-      {
-        note ?
-        <ShowNote note={note}/>
-        :
-        <div>Loading...</div>
-      }
+      
+    
+        <ShowNote note={note!}/>
+        
+      
     </PageWrapper>
   );
 }

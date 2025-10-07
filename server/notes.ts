@@ -1,10 +1,8 @@
 "use server"
 
 import { db } from "@/db/drizzle";
-import { notebooks, InsertNote, InsertNotebook, notes } from "@/db/schema";
-import { auth } from "@/lib/auth";
+import {  InsertNote, notes } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { headers } from "next/headers";
 
 export const createNote = async (values: InsertNote) => {
   try {

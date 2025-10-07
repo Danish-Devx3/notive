@@ -27,11 +27,7 @@ import { useRouter } from "next/navigation";
 import { deleteNotebook } from "@/server/notebooks";
 import { toast } from "sonner";
 
-interface NotebookCardProps {
-  notebook: Notebook;
-}
-
-export default function NotebookCard({ notebook }: NotebookCardProps) {
+export default function NotebookCard({ notebook }: {notebook: Notebook}) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -46,7 +42,7 @@ export default function NotebookCard({ notebook }: NotebookCardProps) {
         router.refresh();
         toast.success("Notebook deleted successfully");
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to delete notebook");
     } finally {
       setIsDeleting(false);
@@ -68,7 +64,7 @@ export default function NotebookCard({ notebook }: NotebookCardProps) {
         </Link>
 
         <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-          <AlertDialogTrigger>
+          <AlertDialogTrigger asChild>
             <Button variant={"destructive"}>
               <Trash2 className="size-4" />
             </Button>

@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { ArrowRightIcon, Loader2, MoveRight, Trash2 } from "lucide-react";
+import { FilePenLine, Loader2, MoveRight, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { deleteNote } from "@/server/notes";
 import { toast } from "sonner";
@@ -46,7 +46,7 @@ export default function NoteCard({ note }: NoteCardProps) {
         router.refresh();
         toast.success("Notes deleted successfully");
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to delete notes");
     } finally {
       setIsDeleting(false);
@@ -59,21 +59,23 @@ export default function NoteCard({ note }: NoteCardProps) {
       <CardHeader className="flex justify-between items-center">
         <CardTitle>{note.title}</CardTitle>
         <Link href={`/dashboard/notebook/${note.notebookId}/note/${note.id}`}>
-          <Button className="flex items-center justify-center gap-2" variant={"outline"}>Edit <MoveRight /></Button>
+          <Button className="flex items-center justify-center gap-2">
+            Edit <FilePenLine size={28} />
+          </Button>
         </Link>
       </CardHeader>
       <CardContent>
-        <p></p>
+        <p>content of note card</p>
       </CardContent>
       <CardFooter className="flex justify-end gap-2">
         <Link
           href={`/dashboard/notebook/${note.notebookId}/note/?id=${note.id}`}
         >
-          <Button>View</Button>
+          <Button variant={"outline"}>View <MoveRight /></Button>
         </Link>
 
         <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-          <AlertDialogTrigger>
+          <AlertDialogTrigger asChild>
             <Button variant={"destructive"}>
               <Trash2 className="size-4" />
             </Button>

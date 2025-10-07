@@ -69,7 +69,7 @@ const VerificationEmail = ({
             {/* Alternative Link Section */}
             <Section className="mb-[32px]">
               <Text className="text-[14px] text-gray-600 leading-[20px] mb-[12px]">
-                If the button above doesn't work, copy and paste this link into your browser:
+                If the button above doesn&apos;t work, copy and paste this link into your browser:
               </Text>
               <Text className="text-[12px] text-blue-600 leading-[18px] break-all bg-gray-50 p-[12px] rounded border border-gray-200">
                 <Link href={verificationUrl} className="text-blue-600 no-underline">
@@ -86,7 +86,7 @@ const VerificationEmail = ({
                 <strong>Why did I receive this email?</strong>
               </Text>
               <Text className="text-[14px] text-gray-600 leading-[20px] mb-[16px]">
-                This email was sent to <strong>{userEmail}</strong> because you recently created an account. If you didn't sign up, you can safely ignore this email.
+                This email was sent to <strong>{userEmail}</strong> because you recently created an account. If you didn&apos;t sign up, you can safely ignore this email.
               </Text>
 
               <Text className="text-[12px] text-gray-500 leading-[18px] text-center mt-[24px]">
