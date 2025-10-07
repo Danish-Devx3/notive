@@ -26,6 +26,8 @@ import { FilePenLine, Loader2, MoveRight, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { deleteNote } from "@/server/notes";
 import { toast } from "sonner";
+import StarterKit from "@tiptap/starter-kit";
+import { generateHTML } from "@tiptap/react";
 
 interface NoteCardProps {
   note: Note;
@@ -36,6 +38,11 @@ export default function NoteCard({ note }: NoteCardProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const router = useRouter();
+
+  const jsonContent =
+    typeof note.content === "string" ? JSON.parse(note.content) : note.content;
+  const html = generateHTML(jsonContent as unknown as object, [StarterKit]).concat('...');
+
 
   async function handleDelete() {
     try {
@@ -65,7 +72,14 @@ export default function NoteCard({ note }: NoteCardProps) {
         </Link>
       </CardHeader>
       <CardContent>
-        <p>content of note card</p>
+        <div className="max-h-20 overflow-hidden">
+          <div
+            dangerouslySetInnerHTML={{
+              __html: html,
+            }}
+            className="prose"
+          />
+        </div>
       </CardContent>
       <CardFooter className="flex justify-end gap-2">
         <Link

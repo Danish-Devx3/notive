@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { TextStyle } from "@tiptap/extension-text-style";
 import type { Editor, JSONContent } from "@tiptap/react";
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
@@ -33,6 +33,8 @@ import {
   Moon,
   Sun,
   ImagePlus,
+  Loader2,
+  SaveAll,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -70,10 +72,19 @@ const extensions = [
   Subscript,
 ];
 
-function MenuBar({ editor }: { editor: Editor }) {
+function MenuBar({ editor, noteId }: { editor: Editor; noteId: string }) {
   const [isDark, setIsDark] = React.useState(
     document.documentElement.classList.contains("dark")
   );
+  const [isSaving, setIsSaving] = React.useState(false);
+
+  const handleSave = async () => {
+    if (!editor) return;
+    setIsSaving(true);
+    const content = editor.getJSON();
+    await updateNote(noteId, { content });
+    setIsSaving(false);
+  };
 
   const editorState = useEditorState({
     editor,
@@ -203,7 +214,9 @@ function MenuBar({ editor }: { editor: Editor }) {
           <Toggle
             size="sm"
             pressed={editorState.isBulletList}
-            onPressedChange={() => editor.chain().focus().toggleBulletList().run()}
+            onPressedChange={() =>
+              editor.chain().focus().toggleBulletList().run()
+            }
             className="h-8 w-8 p-0"
           >
             <List className="h-4 w-4" />
@@ -211,7 +224,9 @@ function MenuBar({ editor }: { editor: Editor }) {
           <Toggle
             size="sm"
             pressed={editorState.isOrderedList}
-            onPressedChange={() => editor.chain().focus().toggleOrderedList().run()}
+            onPressedChange={() =>
+              editor.chain().focus().toggleOrderedList().run()
+            }
             className="h-8 w-8 p-0"
           >
             <ListOrdered className="h-4 w-4" />
@@ -223,7 +238,9 @@ function MenuBar({ editor }: { editor: Editor }) {
           <Toggle
             size="sm"
             pressed={editorState.isCodeBlock}
-            onPressedChange={() => editor.chain().focus().toggleCodeBlock().run()}
+            onPressedChange={() =>
+              editor.chain().focus().toggleCodeBlock().run()
+            }
             className="h-8 w-8 p-0"
           >
             <Code className="h-4 w-4" />
@@ -231,7 +248,9 @@ function MenuBar({ editor }: { editor: Editor }) {
           <Toggle
             size="sm"
             pressed={editorState.isBlockquote}
-            onPressedChange={() => editor.chain().focus().toggleBlockquote().run()}
+            onPressedChange={() =>
+              editor.chain().focus().toggleBlockquote().run()
+            }
             className="h-8 w-8 p-0"
           >
             <Quote className="h-4 w-4" />
@@ -277,7 +296,9 @@ function MenuBar({ editor }: { editor: Editor }) {
           <Toggle
             size="sm"
             pressed={editorState.isUnderline}
-            onPressedChange={() => editor.chain().focus().toggleUnderline().run()}
+            onPressedChange={() =>
+              editor.chain().focus().toggleUnderline().run()
+            }
             className="h-8 w-8 p-0"
           >
             <UnderlineIcon className="h-4 w-4" />
@@ -285,7 +306,9 @@ function MenuBar({ editor }: { editor: Editor }) {
           <Toggle
             size="sm"
             pressed={editorState.isHighlight}
-            onPressedChange={() => editor.chain().focus().toggleHighlight().run()}
+            onPressedChange={() =>
+              editor.chain().focus().toggleHighlight().run()
+            }
             className="h-8 w-8 p-0"
           >
             <Highlighter className="h-4 w-4" />
@@ -305,7 +328,9 @@ function MenuBar({ editor }: { editor: Editor }) {
           <Toggle
             size="sm"
             pressed={editorState.isSuperscript}
-            onPressedChange={() => editor.chain().focus().toggleSuperscript().run()}
+            onPressedChange={() =>
+              editor.chain().focus().toggleSuperscript().run()
+            }
             className="h-8 w-8 p-0"
           >
             <SuperscriptIcon className="h-4 w-4" />
@@ -313,7 +338,9 @@ function MenuBar({ editor }: { editor: Editor }) {
           <Toggle
             size="sm"
             pressed={editorState.isSubscript}
-            onPressedChange={() => editor.chain().focus().toggleSubscript().run()}
+            onPressedChange={() =>
+              editor.chain().focus().toggleSubscript().run()
+            }
             className="h-8 w-8 p-0"
           >
             <SubscriptIcon className="h-4 w-4" />
@@ -327,7 +354,9 @@ function MenuBar({ editor }: { editor: Editor }) {
           <Toggle
             size="sm"
             pressed={editorState.isAlignLeft}
-            onPressedChange={() => editor.chain().focus().setTextAlign("left").run()}
+            onPressedChange={() =>
+              editor.chain().focus().setTextAlign("left").run()
+            }
             className="h-8 w-8 p-0"
           >
             <AlignLeft className="h-4 w-4" />
@@ -345,7 +374,9 @@ function MenuBar({ editor }: { editor: Editor }) {
           <Toggle
             size="sm"
             pressed={editorState.isAlignRight}
-            onPressedChange={() => editor.chain().focus().setTextAlign("right").run()}
+            onPressedChange={() =>
+              editor.chain().focus().setTextAlign("right").run()
+            }
             className="h-8 w-8 p-0"
           >
             <AlignRight className="h-4 w-4" />
@@ -373,8 +404,25 @@ function MenuBar({ editor }: { editor: Editor }) {
         <div className="flex-1" />
 
         {/* Dark Mode Toggle */}
-        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={toggleDarkMode}>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          onClick={toggleDarkMode}
+        >
           {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+        </Button>
+        <Button onClick={handleSave} disabled={isSaving}>
+          {isSaving ? (
+            <span className="flex items-center justify-center gap-2">
+              {" "}
+              <Loader2 className="size-4 animate-spin" /> Saving...
+            </span>
+          ) : (
+            <span className="flex gap-2">
+              <SaveAll /> Save
+            </span>
+          )}
         </Button>
       </div>
     </div>
@@ -383,7 +431,6 @@ function MenuBar({ editor }: { editor: Editor }) {
 
 interface RichTextEditorProps {
   content?: JSONContent;
-  onChange?: (content: JSONContent) => void;
   className?: string;
   noteId?: string;
 }
@@ -394,12 +441,6 @@ export default function RichTextEditor({
   noteId,
 }: RichTextEditorProps) {
   const editor = useEditor({
-    onUpdate: ({ editor }) => {
-      if (noteId) {
-        const content = editor.getJSON();
-        updateNote(noteId, { content });
-      }
-    },
     extensions,
     content,
     immediatelyRender: false,
@@ -419,7 +460,7 @@ export default function RichTextEditor({
 
   return (
     <div className="border border-editor-border rounded-lg overflow-hidden bg-background shadow-lg">
-      <MenuBar editor={editor} />
+      <MenuBar editor={editor} noteId={noteId!} />
       <EditorContent editor={editor} />
     </div>
   );

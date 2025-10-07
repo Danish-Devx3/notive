@@ -7,9 +7,11 @@ import Link from "next/link";
 import React from "react";
 
 export default function ShowNote({ note }: { note: Note }) {
+  const content =
+    typeof note.content === "string" ? JSON.parse(note.content) : note.content;
   const editor = useEditor({
     extensions: [StarterKit],
-    content: note.content!,
+    content: content as unknown as object,
     immediatelyRender: false,
     editable: false,
   });
