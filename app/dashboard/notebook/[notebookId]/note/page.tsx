@@ -3,6 +3,7 @@ import PageWrapper from "@/components/page-wrapper";
 import ShowNote from "@/components/show-note";
 import { Note, Notebook } from "@/db/schema";
 import { getNoteById } from "@/server/notes";
+import { Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -16,7 +17,6 @@ export default function Page() {
   const searchParams = useSearchParams()
  
   const id = searchParams.get('id')
-
   useEffect(() => {
     if(id){
       getNoteById(id).then((res) => {
@@ -33,11 +33,13 @@ export default function Page() {
         { label: note?.title ??"Note", url: `/dashboard/notebook/${note?.notebookId}/note?id=${id}` },
       ]}
     >
-      
-    
-        <ShowNote note={note!}/>
-        
-      
+      {note ? (
+        <ShowNote note={note} />
+      ) : (
+        <div className="flex justify-center items-center h-screen">
+          <Loader2 size={50} className="animate-spin" color="#b46a32" />
+        </div>
+      )}
     </PageWrapper>
   );
 }
