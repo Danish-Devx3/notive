@@ -8,6 +8,7 @@ export const signInUser = async (email: string, password: string) => {
       body: {
         email,
         password,
+        callbackURL: "/dashboard",
       },
     });
 
@@ -25,7 +26,8 @@ export const signUpUser = async (email: string, password: string, name: string)=
             body: {
                 email,
                 password,
-                name
+                name,
+                callbackURL: "/dashboard"
             }
         })
 

@@ -56,11 +56,13 @@ export default function NotebookCard({ notebook }: {notebook: Notebook}) {
         <CardTitle>{notebook.name}</CardTitle>
       </CardHeader>
       <CardContent>
-        <p>{notebook.notes.length ?? 0}</p>
+        <p>{notebook.notes.length < 1 && (
+          <span>This notebook is empty click on start to adding your notes!</span>
+        )}</p>
       </CardContent>
       <CardFooter className="flex justify-end gap-2">
         <Link href={`/dashboard/notebook/${notebook.id}`}>
-          <Button variant={"outline"}>View</Button>
+          <Button>{notebook.notes.length < 1 ? "Start Adding Notes" : "View"}</Button>
         </Link>
 
         <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
