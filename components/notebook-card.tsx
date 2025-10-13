@@ -56,8 +56,10 @@ export default function NotebookCard({ notebook }: {notebook: Notebook}) {
         <CardTitle>{notebook.name}</CardTitle>
       </CardHeader>
       <CardContent>
-        <p>{notebook.notes.length < 1 && (
+        <p>{notebook.notes.length < 1 ? (
           <span>This notebook is empty click on start to adding your notes!</span>
+        ) : (
+          <span>{notebook.notes.length} notes in this notebook</span>
         )}</p>
       </CardContent>
       <CardFooter className="flex justify-end gap-2">

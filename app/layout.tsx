@@ -22,8 +22,38 @@ const oxanium = Oxanium({
 });
 
 export const metadata: Metadata = {
-  title: "Notive",
-  description: "Create your notes, organize your thoughts, and bring ideas to life.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL!),
+  title: {
+    default: "Notive - A note-taking app ",
+    template: "%s | Notive - A note-taking app ",
+  },
+  description: "Advanced note-taking app with real-time collaboration, rich text editing, and seamless organization. Perfect for students, professionals, and teams.",
+  keywords: [
+    'note taking app',
+    'real-time notes',
+    'collaborative notes',
+    'rich text editor',
+    'note organization',
+    'productivity app',
+    'TipTap editor',
+    'markdown notes',
+    'team collaboration',
+    'note sharing',
+    'digital notebook',
+    'cloud notes'
+  ],
+  authors: [{name: "Danish Ansari", url: "https://github.com/Danish-Devx3"}],
+  openGraph: {
+    type: "website",
+    url: `${process.env.NEXT_PUBLIC_BASE_URL}`,
+    siteName: "Notive - A note-taking app ",
+    title: "Notive - A note-taking app ",
+    description: "Advanced note-taking app with real-time collaboration, rich text editing, and seamless organization. Perfect for students, professionals, and teams.",
+    images: [{url: `${process.env.NEXT_PUBLIC_BASE_URL}/ogimage.png}`, height: 630, width: 1200, alt: "Notive - A note-taking app "}]
+  },
+  verification:{
+    google: "W51XKeCYGrDF1PENoxzDnzf6DYnzdF--N9-E5n0acZc"
+  },
 };
 
 export default function RootLayout({
