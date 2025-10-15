@@ -12,28 +12,31 @@ export const signInUser = async (email: string, password: string) => {
       },
     });
 
-    return {success: true, message: "Signed in successfully"}
+    return { success: true, message: "Signed in successfully" };
   } catch (error) {
-    const e = error as Error
-    return {success: false, message: e.message || "Failed to sign in"}
+    const e = error as Error;
+    return { success: false, message: e.message || "Failed to sign in" };
   }
 };
 
+export const signUpUser = async (
+  email: string,
+  password: string,
+  name: string
+) => {
+  try {
+    await auth.api.signUpEmail({
+      body: {
+        email,
+        password,
+        name,
+        callbackURL: "/dashboard",
+      },
+    });
 
-export const signUpUser = async (email: string, password: string, name: string)=>{
-    try {
-        await auth.api.signUpEmail({
-            body: {
-                email,
-                password,
-                name,
-                callbackURL: "/dashboard"
-            }
-        })
-
-        return {success: true, message: "Signed up successfully"};
-    } catch (error) {
-        const e = error as Error
-        return {success: false, message: e.message || "Failed to sign up"}
-    }
-}
+    return { success: true, message: "Email verification link sent successfully on " + email };
+  } catch (error) {
+    const e = error as Error;
+    return { success: false, message: e.message || "Error in signing up" };
+  }
+};
