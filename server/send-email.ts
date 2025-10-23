@@ -34,7 +34,7 @@ export const sendResetPasswordEmail = async (
     const info = await transporter.sendMail({
       from: `Notive <${process.env.EMAIL_USER}>`,
       to: userEmail,
-      subject: "Verify Your Email",
+      subject: "Reset Your Password",
       html: getResetPasswordEmailHTML(userName || "there", userEmail, resetUrl),
     });
     if (!info.messageId) {

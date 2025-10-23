@@ -62,7 +62,7 @@ export default function FooterSection() {
                     </Link>
                     
                     <Link
-                        href="#"
+                        href="https://github.com/Danish-Devx3/notive.git"
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label="Instagram"

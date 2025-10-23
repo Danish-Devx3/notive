@@ -31,6 +31,7 @@ export const auth = betterAuth({
         throw new Error("Failed to send reset password email");
       }
     },
+    resetPasswordTokenExpiresIn: 60 * 60, // 1 hour
   },
 
   emailVerification: {
@@ -43,6 +44,7 @@ export const auth = betterAuth({
         throw new Error("Failed to send verification email");
       }
     },
+    expiresIn: 60 * 60 // 1 hour
   },
 
   socialProviders: {
